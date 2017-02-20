@@ -9,20 +9,32 @@ import com.kk.boxingarticles.model.Article;
  */
 
 public class ArticleViewModel {
-    private Context context;
-    private Article article;
+    private Context mContext;
+    private Article mArticle;
 
     public ArticleViewModel(Context context, Article article) {
-        this.context = context;
-        this.article = article;
+        this.mContext = context;
+        this.mArticle = article;
     }
-    public String getArticleTitle() {
-        return article.getTitle();
-    }
-    public String getCountVotes() {
-        //just stubbed value
-        return ""+10;
+    public String getTitle() {
+        return mArticle.getTitle();
     }
 
+    public String getContent() {
+        return mArticle.getContent();
+    }
+    public String getDate() {
+        return mArticle.getDate();
+    }
+    public String getAuthor() {
+        return mArticle.getAuthor();
+    }
+    public String getContentUrl() {
+        return mArticle.getContentUrl();
+    }
+    public String getImage() {
+        return mArticle.getContentUrl();
+    }
+        
 
 }
