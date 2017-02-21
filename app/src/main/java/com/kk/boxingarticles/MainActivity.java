@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNext(ArrayList<Article> value) {
                 Log.i("Observer get: ",value.toString());
-                recyclerView.setAdapter(new ArticleAdapter(value));
+                recyclerView.setAdapter(new ArticleAdapter(value, getApplicationContext()));
             }
 
 

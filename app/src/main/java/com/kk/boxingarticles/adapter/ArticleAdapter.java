@@ -13,6 +13,7 @@ import com.kk.boxingarticles.R;
 
 import com.kk.boxingarticles.databinding.ItemArticleBinding;
 import com.kk.boxingarticles.model.Article;
+import com.kk.boxingarticles.viewModel.ArticleViewModel;
 
 import java.util.ArrayList;
 
@@ -23,10 +24,11 @@ import java.util.ArrayList;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.BindingViewHolder> {
 
     private ArrayList<Article> mArticles;
+    private Context mContext;
 
-
-    public ArticleAdapter(ArrayList<Article> mArticles) {
+    public ArticleAdapter(ArrayList<Article> mArticles, Context mContext) {
         this.mArticles = mArticles;
+        this.mContext = mContext;
     }
 
     @Override
@@ -39,9 +41,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.BindingV
 
     @Override
     public void onBindViewHolder(BindingViewHolder holder, int position) {
-        Article status = mArticles.get(position);
-        holder.bind(status);
-
+        ItemArticleBinding binding = holder.binding;
+        //ArticleViewModel status = mArticles.get(position);
+        //holder.bind(status);
+        binding.setAvm(new ArticleViewModel(mArticles.get(position), mContext));
     }
 
     @Override
@@ -56,8 +59,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.BindingV
             super(rowView);
             this.binding = DataBindingUtil.bind(rowView);
         }
-        public void bind(Article article) {
-            binding.setArticle(article);
+        public void bind(ArticleViewModel article) {
+            binding.setAvm(article);
+
         }
     }
 

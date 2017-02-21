@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="article"
-            type="com.kk.boxingarticles.model.Article" />
+            name="avm"
+            type="com.kk.boxingarticles.viewModel.ArticleViewModel" />
     </data>
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
                 android:layout_alignParentTop="true"
-                tools:imageUrl="@{article.image}" />
+                tools:imageUrl="@{avm.image}" />
 
             <TextView
                 android:id="@+id/title"
@@ -49,7 +49,7 @@
                 android:shadowDx="4"
                 android:shadowDy="4"
                 android:shadowRadius="4"
-                android:text="@{article.title}"
+                android:text="@{avm.title}"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -66,7 +66,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:text="@{article.author}"
+                android:text="@{avm.author}"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 />
 
@@ -81,7 +81,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="0dp"
-                android:text="@{article.date}"
+                android:text="@{avm.date}"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 />
 

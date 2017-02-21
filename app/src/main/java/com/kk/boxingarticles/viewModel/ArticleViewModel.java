@@ -12,9 +12,9 @@ public class ArticleViewModel {
     private Context mContext;
     private Article mArticle;
 
-    public ArticleViewModel(Context context, Article article) {
-        this.mContext = context;
+    public ArticleViewModel(Article article,Context context) {
         this.mArticle = article;
+        this.mContext = context;
     }
     public String getTitle() {
         return mArticle.getTitle();
@@ -33,8 +33,8 @@ public class ArticleViewModel {
         return mArticle.getContentUrl();
     }
     public String getImage() {
-        return mArticle.getContentUrl();
+        return mArticle.getImage();
     }
-        
+
 
 }
