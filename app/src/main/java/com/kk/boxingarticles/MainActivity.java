@@ -10,6 +10,7 @@ import android.util.Log;
 import com.kk.boxingarticles.adapter.ArticleAdapter;
 //import com.kk.androidcardview.manager.ArticleManager;
 import com.kk.boxingarticles.model.Article;
+import com.kk.boxingarticles.utils.DataManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,14 +34,12 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
 
-    final private static String SOURCE_WEB = "http://www.ringpolska.pl";
-    private ArrayList<Article> articleList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         recyclerView = (RecyclerView) findViewById(R.id.articles);
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         //ustawiamy LayoutManagera
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         //ustawiamy animatora, ktory odpowiada za animacje dodania/usuniecia elementow listy
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         //recyclerView.setAdapter(new ArticleAdapter(myBoxArticles.getArticleList(), recyclerView));
 
 
-          observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(this.<String>getObserver());
+        new DataManager().getArticlesFromWebsite().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(this.<String>getObserver());
 
         /** Testowy kod */
 //        Article one = new Article("dupa","dupa");
@@ -75,13 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    Observable<ArrayList<Article>> observable = Observable.fromCallable(new Callable<ArrayList<Article>>() {
-        @Override
-        public ArrayList<Article> call() throws Exception {
-            ArrayList<Article> data = getHeadlines(SOURCE_WEB);
-            return data;
-        }
-    });
+
+
 
     protected  Observer<ArrayList<Article>> getObserver() {
         return new Observer<ArrayList<Article>>() {
@@ -110,51 +104,5 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-
-    public ArrayList<Article> getHeadlines(String source) throws IOException {
-        Document doc = (Document) Jsoup.connect(source).get();
-        Elements newsHeadlines = doc.select("h2");
-        Elements newsAuthors = doc.select("span.art-postauthoricon");
-        Elements newsDates = doc.select("time");
-        Elements newsContentUrls = doc.select("h2 a[href]");
-        Elements newsImagesUrls = doc.select("div[class=art-article]");
-
-        int temp = newsHeadlines.size();
-        int counter = 0;
-        while (counter != temp) {
-            String newsHeadline = String.valueOf(newsHeadlines.eq(counter).text());
-            String newsAuthor = String.valueOf(newsAuthors.eq(counter).text());
-            newsAuthor=changeAuthor(newsAuthor);
-            String newsDate = String.valueOf(newsDates.eq(counter).text());
-            String newsContentUrl = String.valueOf(newsContentUrls.eq(counter).attr("href"));
-            Element newsImage = newsImagesUrls.get(counter).select("img , iframe").first();
-            String newsImageUrl = String.valueOf(newsImage.attr("src"));
-            if (!(newsImageUrl.contains(SOURCE_WEB))) {
-                newsImageUrl = SOURCE_WEB + newsImageUrl;
-                if(newsImageUrl.contains("www.youtube.com"))
-                newsImageUrl=getYouTubeThumbnail(newsImageUrl);
-            }
-            Log.i("PictureURL", newsImageUrl);
-            articleList.add(new Article(newsHeadline, newsAuthor, newsDate, newsContentUrl, newsImageUrl));
-            counter++;
-        }
-        return  articleList;
-    }
-
-    public String getYouTubeThumbnail(String url) {
-        String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
-        Pattern compiledPattern = Pattern.compile(pattern);
-        Matcher matcher = compiledPattern.matcher(url);
-        if(matcher.find())
-            return "http://img.youtube.com/vi/"+matcher.group()+"/hqdefault.jpg";
-        return url;
-
-    }
-
-    public String changeAuthor(String author) {
-        if(author.toLowerCase().equals("redakcja"))
-            return "ringpolska.pl";
-        return author;
-    }
 
 }

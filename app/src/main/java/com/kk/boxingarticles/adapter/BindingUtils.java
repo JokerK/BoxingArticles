@@ -10,8 +10,8 @@ import com.squareup.picasso.Picasso;
  * Created by Karol on 2017-02-08.
  */
 
-public class ImageBinder {
-    private ImageBinder() {
+public class BindingUtils {
+    private BindingUtils() {
 
     }
     @BindingAdapter("imageUrl")
