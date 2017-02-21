@@ -10,6 +10,7 @@ import android.util.Log;
 import com.kk.boxingarticles.adapter.ArticleAdapter;
 //import com.kk.androidcardview.manager.ArticleManager;
 import com.kk.boxingarticles.model.Article;
+import com.kk.boxingarticles.viewModel.ArticleViewModel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         //recyclerView.setAdapter(new ArticleAdapter(myBoxArticles.getArticleList(), recyclerView));
 
 
-          observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(this.<String>getObserver());
+          observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(this.getObserver());
 
         /** Testowy kod */
 //        Article one = new Article("dupa","dupa");
@@ -74,44 +75,19 @@ public class MainActivity extends AppCompatActivity {
 //        recyclerView.setAdapter(new ArticleAdapter(artykuly));
 
     }
-
-    Observable<ArrayList<Article>> observable = Observable.fromCallable(new Callable<ArrayList<Article>>() {
-        @Override
-        public ArrayList<Article> call() throws Exception {
-            ArrayList<Article> data = getHeadlines(SOURCE_WEB);
-            return data;
-        }
-    });
-
-    protected  Observer<ArrayList<Article>> getObserver() {
-        return new Observer<ArrayList<Article>>() {
+    Observable<ArrayList<Article>> observable =
+        Observable.fromCallable(new Callable<ArrayList<Article>>() {
             @Override
-            public void onSubscribe(Disposable d) {
-                Log.i("Observer get: ", "mamy sub");
-              //  Toast.makeText(context, "Wait...", Toast.LENGTH_SHORT).show();
+            public ArrayList<Article> call() throws Exception {
+                ArrayList<Article> data = getHeadlines(SOURCE_WEB);
+                return data;
             }
-
-            @Override
-            public void onNext(ArrayList<Article> value) {
-                Log.i("Observer get: ",value.toString());
-                recyclerView.setAdapter(new ArticleAdapter(value, getApplicationContext()));
-            }
+        });
 
 
-            @Override
-            public void onError(Throwable e) {
-                Log.i("Observer get ", "Error");
-            }
-
-            @Override
-            public void onComplete() {
-                Log.i("Observer  ", "complete");
-            }
-        };
-    }
 
 
-    public ArrayList<Article> getHeadlines(String source) throws IOException {
+    public  ArrayList<Article> getHeadlines(String source) throws IOException {
         Document doc = (Document) Jsoup.connect(source).get();
         Elements newsHeadlines = doc.select("h2");
         Elements newsAuthors = doc.select("span.art-postauthoricon");
@@ -128,11 +104,14 @@ public class MainActivity extends AppCompatActivity {
             String newsDate = String.valueOf(newsDates.eq(counter).text());
             String newsContentUrl = String.valueOf(newsContentUrls.eq(counter).attr("href"));
             Element newsImage = newsImagesUrls.get(counter).select("img , iframe").first();
-            String newsImageUrl = String.valueOf(newsImage.attr("src"));
+            String newsImageUrl = "ringpolska.pl";
+            if(newsImage != null)                                                                     //todo ogarnac tego ifa
+                newsImageUrl = String.valueOf(newsImage.attr("src"));
+            Log.i("newsImageUrl", newsImageUrl);
             if (!(newsImageUrl.contains(SOURCE_WEB))) {
                 newsImageUrl = SOURCE_WEB + newsImageUrl;
                 if(newsImageUrl.contains("www.youtube.com"))
-                newsImageUrl=getYouTubeThumbnail(newsImageUrl);
+                    newsImageUrl=getYouTubeThumbnail(newsImageUrl);
             }
             Log.i("PictureURL", newsImageUrl);
             articleList.add(new Article(newsHeadline, newsAuthor, newsDate, newsContentUrl, newsImageUrl));
@@ -155,6 +134,33 @@ public class MainActivity extends AppCompatActivity {
         if(author.toLowerCase().equals("redakcja"))
             return "ringpolska.pl";
         return author;
+    }
+
+    protected Observer<ArrayList<Article>> getObserver() {
+        return new Observer<ArrayList<Article>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.i("Observer get: ", "mamy sub");
+                //  Toast.makeText(context, "Wait...", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(ArrayList<Article> value) {
+                Log.i("Observer get: ",value.toString());
+                recyclerView.setAdapter(new ArticleAdapter(value, getApplicationContext()));
+            }
+
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("Observer get ", "Error");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.i("Observer  ", "complete");
+            }
+        };
     }
 
 }
