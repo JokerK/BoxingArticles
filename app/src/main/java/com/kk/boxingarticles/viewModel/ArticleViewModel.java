@@ -1,9 +1,13 @@
 package com.kk.boxingarticles.viewModel;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Toast;
 
+import com.kk.boxingarticles.ArticleDetailsActivity;
+import com.kk.boxingarticles.MainActivity;
 import com.kk.boxingarticles.model.Article;
 
 /**
@@ -43,6 +47,9 @@ public class ArticleViewModel {
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(),"Otwieram artykul"+getTitle(), Toast.LENGTH_SHORT).show();
+                Intent articleIntent = new Intent(mContext, ArticleDetailsActivity.class);
+                articleIntent.putExtra("article", mArticle);
+                mContext.startActivity(articleIntent);
             }
         };
     }

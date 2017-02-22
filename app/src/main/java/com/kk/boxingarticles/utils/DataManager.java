@@ -54,13 +54,15 @@ public class DataManager {
             String newsDate = String.valueOf(newsDates.eq(counter).text());
             String newsContentUrl = String.valueOf(newsContentUrls.eq(counter).attr("href"));
             Element newsImage = newsImagesUrls.get(counter).select("img , iframe").first();
-            String newsImageUrl = String.valueOf(newsImage.attr("src"));
+            String newsImageUrl = "ringpolska.pl";
+            if(newsImage != null)                                                                     //todo ogarnac tego ifa
+                newsImageUrl = String.valueOf(newsImage.attr("src"));
             if (!(newsImageUrl.contains(SOURCE_WEB))) {
                 newsImageUrl = SOURCE_WEB + newsImageUrl;
                 if(newsImageUrl.contains("www.youtube.com"))
                     newsImageUrl=getYouTubeThumbnail(newsImageUrl);
             }
-            Log.i("PictureURL", newsImageUrl);
+            Log.i("ContentUrl", newsContentUrl);
             articleList.add(new Article(newsHeadline, newsAuthor, newsDate, newsContentUrl, newsImageUrl));
             counter++;
         }
