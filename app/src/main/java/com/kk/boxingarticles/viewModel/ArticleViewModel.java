@@ -1,6 +1,8 @@
 package com.kk.boxingarticles.viewModel;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.Toast;
 
 import com.kk.boxingarticles.model.Article;
 
@@ -34,6 +36,15 @@ public class ArticleViewModel {
     }
     public String getImage() {
         return mArticle.getImage();
+    }
+
+    public View.OnClickListener onReadMoreClicked() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),"Otwieram artykul"+getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
 

@@ -64,18 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         new DataManager().getArticlesFromWebsite().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(this.<String>getObserver());
 
-        /** Testowy kod */
-//        Article one = new Article("dupa","dupa");
-//        Article two = new Article("noga","noga");
-//        ArrayList<Article> artykuly = new ArrayList<>();
-//        artykuly.add(one);
-//        artykuly.add(two);
-//        recyclerView.setAdapter(new ArticleAdapter(artykuly));
-
     }
-
-
-
 
     protected  Observer<ArrayList<Article>> getObserver() {
         return new Observer<ArrayList<Article>>() {

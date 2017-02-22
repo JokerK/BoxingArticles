@@ -1,12 +1,12 @@
 package com.kk.boxingarticles.model;
 
-import android.databinding.BaseObservable;
+
 
 /**
  * Created by Karol on 2017-01-25.
  */
 
-public class Article extends BaseObservable {
+public class Article  {
     private String mTitle;
     private String mAuthor;
     private String mContent;
